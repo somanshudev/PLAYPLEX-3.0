@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Payment Session</title>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <button id="pay" onclick="handlePayment()">Pay</button>
+    <div id="loading" style="display: none;">Processing...</div>
+
+    <script>
+        var stripe = Stripe(
+            "pk_test_51OarV3SHcQE9TzNq42f3H0mrbpelHy90NPAV1Yya5seh99p6BpGiP1TWtOx6ucSAEk3k21OiAZHJM0DeeNkiLDp900iVsyks8m"
+        );
+
+        function handlePayment() {
+            // Show loading indicator
+            document.getElementById("loading").style.display = "block";
+
+            stripe.redirectToCheckout({
+                lineItems: [{
+                    price: "price_1OareiSHcQE9TzNqntH8Q2YC",
+                    quantity: 1,
+                }],
+                mode: "payment",
+                successUrl: "https://www.google.com/",
+                cancelUrl: "https://www.youtube.com",
+            })
+            .then(function (result) {
+                // Handle result, if needed
+                if (result.error) {
+                    // Handle errors here
+                    console.error(result.error.message);
+                }
+            })
+            .catch(function (error) {
+                // Handle errors here
+                console.error('Error redirecting to checkout:', error);
+            })
+            .finally(function () {
+                // Hide loading indicator after payment attempt
+                document.getElementById("loading").style.display = "none";
+            });
+        }
+    </script>
+</body>
+</html>
